@@ -15,7 +15,6 @@ ERROR CASES: Return NULL for invalid inputs.
 
 NOTES:
 */
-
 #include <iostream>
 
 struct transaction {
@@ -24,6 +23,68 @@ struct transaction {
 	char description[20];
 };
 
+int year(char *day){
+
+	int year = 0, i = 6, value;
+	for (i = 6; day[i] != '\0'; i++){
+		value = (int)day[i] - '0';
+		year = year * 10 + value;
+	}
+	return year;
+}
+
+int month(char *day){
+
+	int month;
+	month = ((int)day[3] - '0') * 10 + (int)day[4] - '0';
+	return month;
+}
+
+int date(char *day){
+
+	int date;
+	date = ((int)day[0] - '0') * 10 + (int)day[1] - '0';
+	return date;
+}
+
+
+int date_cmp(char *day1, char *day2) {
+
+	int year1, year2, month1, month2, date1, date2;
+
+	year1 = year(day1);
+	year2 = year(day2);
+
+	month1 = month(day1);
+	month2 = month(day2);
+
+	date1 = date(day1);
+	date2 = date(day2);
+
+	if (year1 == year2){
+		if (month1 == month2){
+			if (date1 == date2)
+				return 0;
+		}
+	}
+}
+
 struct transaction * sortedArraysCommonElements(struct transaction *A, int ALen, struct transaction *B, int BLen) {
-	return NULL;
+
+	int i, j, count = 0;
+
+	if (!A || !B)
+		return NULL;
+	else{
+		for (i = 0; i<ALen; i++){
+			for (j = 0; j<BLen; j++){
+				if (date_cmp(A[i].date, B[j].date) == 0){
+					count++;
+					return (A + i);
+				}
+			}
+		}
+		if (count == 0)
+			return NULL;
+	}
 }

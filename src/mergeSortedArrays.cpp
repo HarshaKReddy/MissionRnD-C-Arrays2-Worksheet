@@ -22,6 +22,86 @@ struct transaction {
 	char description[20];
 };
 
+int getYear(char *day){
+
+	int year = 0, i = 6, value;
+	for (i = 6; day[i] != '\0'; i++){
+
+		value = (int)day[i] - '0';
+		year = year * 10 + value;
+	}
+	return year;
+}
+
+int getMonth(char *day){
+
+	int month;
+	month = ((int)day[3] - '0') * 10 + (int)day[4] - '0';
+	return month;
+}
+
+int getDate(char *day){
+
+	int date;
+	date = ((int)day[0] - '0') * 10 + (int)day[1] - '0';
+	return date;
+}
+
+
+int cmp_date(char *day1, char *day2) {
+
+	int year1, year2, month1, month2, date1, date2;
+
+	year1 = getYear(day1);
+	year2 = getYear(day2);
+
+	month1 = getMonth(day1);
+	month2 = getMonth(day2);
+
+	date1 = getDate(day1);
+	date2 = getDate(day2);
+
+	if (year1 < year2 || year1 == year2 && month1 == month2 && month1 < month2 && date1 < date2)
+		return -1;
+	   else if (year2 < year1 || month2 < month1 || date2 < date1)
+		return 1;
+	   else if (date1 == date2)
+				return 0;
+		}
+
 struct transaction * mergeSortedArrays(struct transaction *A, int ALen, struct transaction *B, int BLen) {
-	return NULL;
+
+	int	x = 0, y = 0, z = 0;
+
+	if (!A ||!B)
+		return NULL;
+
+	struct transaction *res;
+	res = (struct transaction*)malloc((ALen + BLen)*sizeof(struct transaction));
+
+	while (x <ALen && y < BLen) {
+		if ((cmp_date(A[x].date, B[y].date) <= 0)){
+			res[z] = A[x];
+			x++;
+			z++;
+		}
+		else {
+			res[z] = B[y];
+			z++;
+			y++;
+		}
+	}
+
+	while (x < ALen) {
+		res[z] = A[x];
+		x++;
+		z++;
+	}
+
+	while (y < BLen) {
+		res[z] = B[y];
+		z++;
+		y++;
+	}
+	return res;
 }
